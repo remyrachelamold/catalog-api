@@ -1,0 +1,92 @@
+.edit-product-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.edit-product-modal__dialog {
+  width: min(100%, 520px);
+  padding: 1.5rem;
+  border-radius: 1.25rem;
+  background: #ffffff;
+  box-shadow: 0 25px 50px rgba(15, 23, 42, 0.2);
+}
+
+.edit-product-modal__header {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.edit-product-modal__header h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 1.35rem;
+}
+
+.edit-product-modal__header p {
+  margin: 0.35rem 0 0;
+  color: #64748b;
+}
+
+.edit-product-modal__close {
+  border: none;
+  background: #f1f5f9;
+  color: #334155;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.edit-product-modal__close:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.edit-product-modal__form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.edit-product-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+}
+
+.edit-product-modal__cancel,
+.edit-product-modal__submit {
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.2rem;
+  font-size: 0.925rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.edit-product-modal__cancel {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.edit-product-modal__submit {
+  background: #111827;
+  color: #ffffff;
+}
+
+.edit-product-modal__cancel:disabled,
+.edit-product-modal__submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}

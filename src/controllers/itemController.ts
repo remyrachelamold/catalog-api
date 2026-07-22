@@ -31,6 +31,19 @@ export async function patchCatalogItem(input: { id: string; data: Partial<IItem>
 }
 
 // -------- Express Route Handlers (for HTTP API) --------
+// Get item by ID (API)
+export const getItemById = async (req: Request, res: Response) => {
+    try {
+        const item = await Item.findById(req.params.id);
+        if (!item) {
+            return res.status(404).json({ message: "Item not found" });
+        }
+        res.status(200).json(item);
+    } catch (error) {
+        res.status(500).json({ message: "Error retrieving item", error });
+    }
+};
+
 // Get filtered items (API)
 export const getFilteredItems = async (req: Request, res: Response) => {
     try {

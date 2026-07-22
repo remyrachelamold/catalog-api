@@ -4,6 +4,7 @@ import { Link, useParams } from "react-router-dom";
 import LoadingSpinner from "../components/LoadingSpinner";
 import ProductGrid from "../components/ProductGrid";
 import ProductImage from "../components/ProductImage";
+import { useCart } from "../hooks/useCart";
 import { fetchProductById, fetchProducts, getErrorMessage } from "../services/api";
 import type { Product } from "../types/Product";
 import { formatPrice } from "../utils/formatPrice";
@@ -12,6 +13,7 @@ import "./ProductDetails.css";
 
 export default function ProductDetails() {
   const { id } = useParams();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState<Product | null>(null);
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
@@ -143,6 +145,13 @@ export default function ProductDetails() {
               <strong>ID:</strong> {product._id}
             </span>
           </div>
+          <button
+            type="button"
+            className="product-details__add-to-cart"
+            onClick={() => addToCart(product)}
+          >
+            Add to Cart
+          </button>
         </div>
       </section>
 

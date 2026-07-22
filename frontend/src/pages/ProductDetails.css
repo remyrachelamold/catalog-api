@@ -102,6 +102,23 @@
   font-size: 0.95rem;
 }
 
+.product-details__add-to-cart {
+  align-self: flex-start;
+  border: none;
+  border-radius: 999px;
+  padding: 0.8rem 1.1rem;
+  background: #111827;
+  color: #ffffff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.product-details__add-to-cart:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
 .product-details__related {
   margin-top: 3rem;
 }

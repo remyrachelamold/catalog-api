@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
+import { useAuthContext } from "../context/AuthContext";
 import { useCart } from "../hooks/useCart";
+import { useToast } from "../hooks/useToast";
 import "./Navbar.css";
 
 export default function Navbar() {
   const { totalItems } = useCart();
+  const { isAuthenticated, logout, user } = useAuthContext();
+  const { showToast } = useToast();
 
   return (
     <header className="navbar">
@@ -27,6 +31,35 @@ export default function Navbar() {
               </span>
             )}
           </Link>
+          {isAuthenticated ? (
+            <>
+              <Link to="/orders" className="navbar__link">
+                Orders
+              </Link>
+              <Link to="/profile" className="navbar__link">
+                {user?.fullName ?? "Profile"}
+              </Link>
+              <button
+                type="button"
+                className="navbar__link navbar__link--button"
+                onClick={() => {
+                  logout();
+                  showToast("You have been logged out.", "info");
+                }}
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="navbar__link">
+                Login
+              </Link>
+              <Link to="/register" className="navbar__link navbar__link--primary">
+                Register
+              </Link>
+            </>
+          )}
         </nav>
       </div>
     </header>

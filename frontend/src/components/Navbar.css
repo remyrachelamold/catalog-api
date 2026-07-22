@@ -67,6 +67,23 @@
   color: #0f172a;
 }
 
+.navbar__link--button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.navbar__link--primary {
+  background: #4338ca;
+  color: #ffffff;
+}
+
+.navbar__link--primary:hover {
+  background: #3730a3;
+  color: #ffffff;
+}
+
 .navbar__link--active {
   background: #eef2ff;
   color: #4338ca;

@@ -23,6 +23,8 @@ export default function EditProductModal({
     name: "",
     price: "",
     category: "",
+    imageUrl: "",
+    description: "",
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

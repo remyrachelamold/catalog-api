@@ -33,6 +33,11 @@ export default function Navbar() {
           </Link>
           {isAuthenticated ? (
             <>
+              {user?.role === "admin" && (
+                <Link to="/admin" className="navbar__link">
+                  Admin
+                </Link>
+              )}
               <Link to="/orders" className="navbar__link">
                 Orders
               </Link>

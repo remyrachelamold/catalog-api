@@ -6,6 +6,8 @@ export interface IItem {
   category: string;
   imageUrl: string;
   description?: string;
+  stock?: number;
+  createdAt?: Date;
 }
 
 const itemSchema = new mongoose.Schema<IItem>({
@@ -18,6 +20,8 @@ const itemSchema = new mongoose.Schema<IItem>({
       "https://via.placeholder.com/300x200?text=Product",
   },
   description: { type: String, default: "" },
+  stock: { type: Number, default: 10, min: 0 },
+  createdAt: { type: Date, default: Date.now },
 });
 
 export default mongoose.model<IItem>(

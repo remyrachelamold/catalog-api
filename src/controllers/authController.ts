@@ -6,8 +6,8 @@ import User from "../model/user";
 const JWT_SECRET = process.env.JWT_SECRET ?? "dev-secret";
 const JWT_EXPIRES_IN = "7d";
 
-function signToken(userId: string) {
-  return jwt.sign({ sub: userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
+function signToken(userId: string, role: string) {
+  return jwt.sign({ sub: userId, role }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 }
 
 export const registerUser = async (req: Request, res: Response) => {
@@ -36,9 +36,10 @@ export const registerUser = async (req: Request, res: Response) => {
       fullName,
       email,
       password: hashedPassword,
+      role: "customer",
     });
 
-    const token = signToken(user._id.toString());
+    const token = signToken(user._id.toString(), user.role);
 
     return res.status(201).json({
       message: "User registered successfully.",
@@ -47,6 +48,8 @@ export const registerUser = async (req: Request, res: Response) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
+        role: user.role,
+        isDisabled: user.isDisabled,
         createdAt: user.createdAt,
       },
     });
@@ -68,12 +71,16 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Invalid email or password." });
     }
 
+    if (user.isDisabled) {
+      return res.status(403).json({ message: "This account has been disabled." });
+    }
+
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: "Invalid email or password." });
     }
 
-    const token = signToken(user._id.toString());
+    const token = signToken(user._id.toString(), user.role);
 
     return res.status(200).json({
       message: "Login successful.",
@@ -82,6 +89,8 @@ export const loginUser = async (req: Request, res: Response) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
+        role: user.role,
+        isDisabled: user.isDisabled,
         createdAt: user.createdAt,
       },
     });
@@ -102,6 +111,8 @@ export const getProfile = async (req: Request, res: Response) => {
         id: user._id,
         fullName: user.fullName,
         email: user.email,
+        role: user.role,
+        isDisabled: user.isDisabled,
         createdAt: user.createdAt,
       },
     });

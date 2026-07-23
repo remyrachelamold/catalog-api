@@ -7,6 +7,7 @@ export function productToFormValues(product: Product): ProductFormValues {
     category: product.category,
     imageUrl: product.imageUrl ?? "",
     description: product.description ?? "",
+    stock: String(product.stock ?? 10),
   };
 }
 
@@ -17,6 +18,7 @@ export function parseProductForm(values: ProductFormValues): {
     category: string;
     imageUrl?: string;
     description?: string;
+    stock?: number;
   } | null;
   error: string | null;
 } {
@@ -25,6 +27,7 @@ export function parseProductForm(values: ProductFormValues): {
   const imageUrl = values.imageUrl.trim();
   const description = values.description.trim();
   const price = Number(values.price);
+  const stock = Number(values.stock ?? 10);
 
   if (!name) {
     return { data: null, error: "Product name is required." };
@@ -45,6 +48,7 @@ export function parseProductForm(values: ProductFormValues): {
       category,
       ...(imageUrl ? { imageUrl } : {}),
       ...(description ? { description } : {}),
+      stock: Number.isFinite(stock) ? stock : 10,
     },
     error: null,
   };

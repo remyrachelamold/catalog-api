@@ -2,6 +2,8 @@ export interface AuthUser {
   id: string;
   fullName: string;
   email: string;
+  role?: "admin" | "customer";
+  isDisabled?: boolean;
   createdAt: string;
 }
 

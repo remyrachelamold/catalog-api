@@ -5,6 +5,7 @@ const JWT_SECRET = process.env.JWT_SECRET ?? "dev-secret";
 
 interface JwtPayload {
   sub: string;
+  role?: string;
 }
 
 declare global {
@@ -12,6 +13,7 @@ declare global {
     interface Request {
       user?: {
         id: string;
+        role?: string;
       };
     }
   }
@@ -27,9 +29,17 @@ export function authenticateToken(req: Request, res: Response, next: NextFunctio
 
   try {
     const payload = jwt.verify(token, JWT_SECRET) as JwtPayload;
-    req.user = { id: payload.sub };
+    req.user = { id: payload.sub, role: payload.role };
     return next();
   } catch {
     return res.status(401).json({ message: "Invalid or expired token." });
   }
+}
+
+export function requireAdmin(req: Request, res: Response, next: NextFunction) {
+  if (req.user?.role !== "admin") {
+    return res.status(403).json({ message: "Access denied." });
+  }
+
+  return next();
 }

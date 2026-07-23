@@ -5,6 +5,7 @@ export interface Product {
   category: string;
   imageUrl?: string;
   description?: string;
+  stock?: number;
 }
 
 export interface ProductInput {
@@ -13,6 +14,7 @@ export interface ProductInput {
   category: string;
   imageUrl?: string;
   description?: string;
+  stock?: number;
 }
 
 export interface ProductMutationResponse {
@@ -26,6 +28,7 @@ export interface ProductFormValues {
   category: string;
   imageUrl: string;
   description: string;
+  stock?: string;
 }
 
 export const EMPTY_PRODUCT_FORM: ProductFormValues = {
@@ -34,4 +37,5 @@ export const EMPTY_PRODUCT_FORM: ProductFormValues = {
   category: "",
   imageUrl: "",
   description: "",
+  stock: "10",
 };

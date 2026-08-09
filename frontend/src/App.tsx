@@ -17,6 +17,7 @@ import OrderDetailsPage from "./pages/OrderDetailsPage";
 import ProductDetails from "./pages/ProductDetails";
 import ProfilePage from "./pages/ProfilePage";
 import RegisterPage from "./pages/RegisterPage";
+import WishlistPage from "./pages/WishlistPage";
 import "./App.css";
 
 function App() {
@@ -38,6 +39,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/wishlist" element={<WishlistPage />} />
         <Route
           path="/checkout"
           element={

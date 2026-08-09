@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { useAuthContext } from "../context/AuthContext";
 import { useCart } from "../hooks/useCart";
+import { useWishlist } from "../hooks/useWishlist";
 import { useToast } from "../hooks/useToast";
 import "./Navbar.css";
 
 export default function Navbar() {
   const { totalItems } = useCart();
+  const { totalItems: wishlistCount } = useWishlist();
   const { isAuthenticated, logout, user } = useAuthContext();
   const { showToast } = useToast();
 
@@ -28,6 +30,14 @@ export default function Navbar() {
             {totalItems > 0 && (
               <span className="navbar__badge" aria-label={`${totalItems} items in cart`}>
                 {totalItems}
+              </span>
+            )}
+          </Link>
+          <Link to="/wishlist" className="navbar__link navbar__cart-link">
+            Wishlist
+            {wishlistCount > 0 && (
+              <span className="navbar__badge" aria-label={`${wishlistCount} items in wishlist`}>
+                {wishlistCount}
               </span>
             )}
           </Link>

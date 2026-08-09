@@ -4,15 +4,19 @@ import catalog from "./routes/catalog";
 import auth from "./routes/auth";
 import orders from "./routes/orders";
 import admin from "./routes/admin";
+import wishlist from "./routes/wishlist";
+import reviews from "./routes/reviews";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
-app.use("/catalogs", catalog);
 app.use("/auth", auth);
 app.use("/orders", orders);
 app.use("/admin", admin);
+app.use("/wishlist", wishlist);
+app.use("/catalogs/:productId/reviews", reviews);
+app.use("/catalogs", catalog);
 
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });

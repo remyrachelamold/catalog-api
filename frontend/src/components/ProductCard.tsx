@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
+import { useWishlist } from "../hooks/useWishlist";
 import type { Product } from "../types/Product";
 import { formatPrice } from "../utils/formatPrice";
 import ProductImage from "./ProductImage";
@@ -21,6 +22,8 @@ export default function ProductCard({
   showAdminActions = true,
 }: ProductCardProps) {
   const { addToCart } = useCart();
+  const { isInWishlist, toggleWishlist } = useWishlist();
+  const isFavorite = isInWishlist(product._id);
 
   async function handleDelete(event: React.MouseEvent) {
     event.preventDefault();
@@ -47,6 +50,12 @@ export default function ProductCard({
     onEdit?.(product);
   }
 
+  async function handleToggleWishlist(event: React.MouseEvent) {
+    event.preventDefault();
+    event.stopPropagation();
+    await toggleWishlist(product);
+  }
+
   function handleAddToCart(event: React.MouseEvent) {
     event.preventDefault();
     event.stopPropagation();
@@ -58,6 +67,14 @@ export default function ProductCard({
       <Link to={`/products/${product._id}`} className="product-card__link">
         <div className="product-card__image">
           <span className="product-card__badge">{product.category}</span>
+          <button
+            type="button"
+            className={`product-card__wishlist ${isFavorite ? "product-card__wishlist--active" : ""}`.trim()}
+            aria-label={isFavorite ? "Remove from wishlist" : "Add to wishlist"}
+            onClick={handleToggleWishlist}
+          >
+            {isFavorite ? "♥" : "♡"}
+          </button>
           <ProductImage
             name={product.name}
             imageUrl={product.imageUrl}

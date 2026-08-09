@@ -182,3 +182,114 @@
     flex-direction: column;
   }
 }
+
+.product-details__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.product-details__wishlist-button {
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #111827;
+  border-radius: 999px;
+  padding: 0.85rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.product-details__wishlist-button--active {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+.product-details__reviews {
+  margin-top: 3rem;
+  padding: 2rem;
+  border-radius: 1.5rem;
+  background: #f8fafc;
+}
+
+.product-details__reviews-header {
+  margin-bottom: 1.5rem;
+}
+
+.product-details__review-form,
+.product-details__review-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.product-details__review-row {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.product-details__review-row label {
+  font-weight: 600;
+}
+
+.product-details__review-row textarea,
+.product-details__review-row select {
+  width: 100%;
+  border-radius: 0.85rem;
+  border: 1px solid #cbd5e1;
+  padding: 0.85rem 1rem;
+  font: inherit;
+}
+
+.product-details__review-submit {
+  border: none;
+  border-radius: 999px;
+  padding: 0.9rem 1.25rem;
+  background: #111827;
+  color: #ffffff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.product-details__review-error {
+  color: #b91c1c;
+}
+
+.product-details__review-success {
+  color: #15803d;
+}
+
+.product-details__review-login {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+.product-details__review-login-link {
+  display: inline-block;
+  margin-top: 0.75rem;
+  color: #4338ca;
+}
+
+.product-details__review-card {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+}
+
+.product-details__review-card-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.product-details__review-empty {
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: #fff;
+  border: 1px dashed #cbd5e1;
+}

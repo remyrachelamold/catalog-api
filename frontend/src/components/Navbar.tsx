@@ -54,6 +54,9 @@ export default function Navbar() {
               <Link to="/profile" className="navbar__link">
                 {user?.fullName ?? "Profile"}
               </Link>
+              <Link to="/settings" className="navbar__link">
+                Settings
+              </Link>
               <button
                 type="button"
                 className="navbar__link navbar__link--button"

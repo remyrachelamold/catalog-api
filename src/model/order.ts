@@ -29,6 +29,10 @@ export interface IOrder extends Document {
   tax: number;
   total: number;
   status: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
+  paymentMethod?: "card" | "upi" | "netbanking" | "cod";
+  paymentStatus?: "pending" | "paid" | "failed";
+  transactionId?: string;
+  paidAt?: Date;
   createdAt: Date;
 }
 
@@ -61,6 +65,17 @@ const orderSchema = new mongoose.Schema<IOrder>(
     shippingCost: { type: Number, required: true },
     tax: { type: Number, required: true },
     total: { type: Number, required: true },
+    paymentMethod: {
+      type: String,
+      enum: ["card", "upi", "netbanking", "cod"],
+    },
+    paymentStatus: {
+      type: String,
+      enum: ["pending", "paid", "failed"],
+      default: "pending",
+    },
+    transactionId: { type: String },
+    paidAt: { type: Date },
     status: {
       type: String,
       enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],

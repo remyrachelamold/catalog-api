@@ -27,6 +27,10 @@ export interface Order {
   shippingCost: number;
   tax: number;
   total: number;
+  paymentMethod?: "card" | "upi" | "netbanking" | "cod";
+  paymentStatus?: "pending" | "paid" | "failed";
+  transactionId?: string;
+  paidAt?: string;
   status: "Pending" | "Processing" | "Shipped" | "Delivered" | "Cancelled";
   createdAt: string;
 }
@@ -43,4 +47,9 @@ export interface OrdersResponse {
 export interface OrderCreatePayload {
   items: OrderProduct[];
   shipping: OrderShipping;
+  // Optional safe payment fields (demo only)
+  paymentMethod?: "card" | "upi" | "netbanking" | "cod";
+  paymentStatus?: "pending" | "paid" | "failed";
+  transactionId?: string;
+  paidAt?: string;
 }

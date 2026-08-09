@@ -5,6 +5,19 @@ export interface AuthUser {
   role?: "admin" | "customer";
   isDisabled?: boolean;
   createdAt: string;
+  appearance?: "system" | "light" | "dark";
+  notifications?: {
+    orders?: boolean;
+    shipping?: boolean;
+    delivery?: boolean;
+    promotional?: boolean;
+    wishlist?: boolean;
+    email?: boolean;
+  };
+  shoppingPreferences?: {
+    currency?: string;
+    language?: string;
+  };
 }
 
 export interface AuthResponse {

@@ -28,11 +28,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback((payload: AuthResponse) => {
     setAuthToken(payload.token);
     setUser(payload.user);
+    try {
+      const ap = (payload.user as any).appearance;
+      if (ap === "light" || ap === "dark") {
+        document.documentElement.setAttribute("data-theme", ap);
+        window.localStorage.setItem("catalog-appearance", ap);
+      } else {
+        document.documentElement.removeAttribute("data-theme");
+        window.localStorage.removeItem("catalog-appearance");
+      }
+    } catch (e) {
+      // ignore
+    }
   }, []);
 
   const logout = useCallback(() => {
     setAuthToken(null);
     setUser(null);
+    try {
+      document.documentElement.removeAttribute("data-theme");
+      window.localStorage.removeItem("catalog-appearance");
+    } catch (e) {
+      // ignore
+    }
   }, []);
 
   const restoreSession = useCallback(async () => {
@@ -46,6 +64,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const data = await fetchProfile();
       setUser(data.user);
+      try {
+        const ap = (data.user as any).appearance;
+        if (ap === "light" || ap === "dark") {
+          document.documentElement.setAttribute("data-theme", ap);
+          window.localStorage.setItem("catalog-appearance", ap);
+        } else {
+          document.documentElement.removeAttribute("data-theme");
+          window.localStorage.removeItem("catalog-appearance");
+        }
+      } catch (e) {
+        // ignore
+      }
     } catch {
       setAuthToken(null);
       setUser(null);

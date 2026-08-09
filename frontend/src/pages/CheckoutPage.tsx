@@ -2,6 +2,7 @@ import { useMemo, useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import { createOrder } from "../services/orderApi";
+import { processPayment } from "../services/paymentApi";
 import { useToast } from "../hooks/useToast";
 import { formatPrice } from "../utils/formatPrice";
 import type { OrderShipping } from "../types/order";
@@ -24,6 +25,14 @@ export default function CheckoutPage() {
   const { showToast } = useToast();
   const [shipping, setShipping] = useState<OrderShipping>(INITIAL_SHIPPING);
   const [loading, setLoading] = useState(false);
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "upi" | "netbanking" | "cod">("card");
+  const [cardName, setCardName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [cardExpiry, setCardExpiry] = useState("");
+  const [cardCvv, setCardCvv] = useState("");
+  const [upiId, setUpiId] = useState("demo@upi");
+  const [bank, setBank] = useState("State Bank of India");
+  const [processingPayment, setProcessingPayment] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const shippingCost = 10;
@@ -62,21 +71,113 @@ export default function CheckoutPage() {
       return;
     }
 
-    setLoading(true);
-
+    // Payment handling
     try {
-      const payload = {
+      setProcessingPayment(true);
+
+      // Validate payment inputs per method (basic validation only)
+      let simulate: "success" | "failure" | undefined;
+
+      if (paymentMethod === "card") {
+        if (!cardName.trim()) {
+          setError("Please enter the cardholder name.");
+          setProcessingPayment(false);
+          return;
+        }
+
+        const digits = cardNumber.replace(/\s+/g, "");
+        if (!/^\d{13,19}$/.test(digits)) {
+          setError("Please enter a valid card number (demo).");
+          setProcessingPayment(false);
+          return;
+        }
+
+        if (!/^\d{2}\/\d{2}$/.test(cardExpiry)) {
+          setError("Expiry must be MM/YY (demo).");
+          setProcessingPayment(false);
+          return;
+        }
+
+        if (!/^\d{3,4}$/.test(cardCvv)) {
+          setError("Please enter a valid CVV (demo).");
+          setProcessingPayment(false);
+          return;
+        }
+
+        // Demo failure card
+        if (digits === "4000000000000002") {
+          simulate = "failure";
+        }
+      }
+
+      if (paymentMethod === "upi") {
+        if (!/^[a-zA-Z0-9._-]+@[a-zA-Z]+$/.test(upiId)) {
+          setError("Please enter a valid UPI ID (demo). Example: demo@upi");
+          setProcessingPayment(false);
+          return;
+        }
+      }
+
+      // Call demo payment endpoint for online methods
+      let paymentResult: any = { paymentMethod, paymentStatus: "pending" };
+      if (paymentMethod !== "cod") {
+        try {
+          const cardLast4 = paymentMethod === "card" ? cardNumber.replace(/\s+/g, "").slice(-4) : undefined;
+          paymentResult = await processPayment({
+            paymentMethod,
+            simulate,
+            cardLast4,
+            upiId: paymentMethod === "upi" ? upiId : undefined,
+            bank: paymentMethod === "netbanking" ? bank : undefined,
+          });
+        } catch (err: any) {
+          setError(err?.response?.data?.message ?? "Payment failed. Please try again.");
+          setProcessingPayment(false);
+          return;
+        }
+      } else {
+        paymentResult = { paymentMethod: "cod", paymentStatus: "pending" };
+      }
+
+      // If payment failed, stop
+      if (paymentResult.paymentStatus === "failed" || paymentResult.status === 402) {
+        setError(paymentResult.message ?? "Payment failed (demo). Please try again.");
+        setProcessingPayment(false);
+        return;
+      }
+
+      // Create order with safe payment info only
+      const payload: any = {
         items: cartProducts,
         shipping,
       };
 
+      if (paymentResult.paymentMethod) payload.paymentMethod = paymentResult.paymentMethod;
+      if (paymentResult.paymentStatus) payload.paymentStatus = paymentResult.paymentStatus;
+      if (paymentResult.transactionId) payload.transactionId = paymentResult.transactionId;
+      if (paymentResult.paidAt) payload.paidAt = paymentResult.paidAt;
+
+      setLoading(true);
       const response = await createOrder(payload);
+
       clearCart();
-      showToast("Order placed successfully.", "success");
-      navigate(`/orders/${response.order._id}`);
+      showToast(paymentMethod === "cod" ? "Order placed (COD)." : "Payment successful and order placed.", "success");
+
+      // Navigate to a payment result page with state
+      navigate("/payment-result", {
+        state: {
+          success: true,
+          orderId: response.order._id,
+          transactionId: paymentResult.transactionId,
+          paymentMethod: paymentResult.paymentMethod,
+          amount: total,
+          paidAt: paymentResult.paidAt,
+        },
+      });
     } catch (err) {
       setError("Unable to place order. Please try again.");
     } finally {
+      setProcessingPayment(false);
       setLoading(false);
     }
   };
@@ -191,11 +292,84 @@ export default function CheckoutPage() {
             </div>
           </div>
 
-          {error && <p className="checkout-page__error" role="alert">{error}</p>}
+          <div className="checkout-page__section">
+            <h2>Payment</h2>
 
-          <button type="submit" className="checkout-page__submit" disabled={loading}>
-            {loading ? "Placing order…" : `Place order (${formatPrice(total)})`}
-          </button>
+            <div className="checkout-page__payment-methods">
+              <label>
+                <input type="radio" name="payment" checked={paymentMethod === "card"} onChange={() => setPaymentMethod("card")} /> Card
+              </label>
+              <label>
+                <input type="radio" name="payment" checked={paymentMethod === "upi"} onChange={() => setPaymentMethod("upi")} /> UPI
+              </label>
+              <label>
+                <input type="radio" name="payment" checked={paymentMethod === "netbanking"} onChange={() => setPaymentMethod("netbanking")} /> Net Banking
+              </label>
+              <label>
+                <input type="radio" name="payment" checked={paymentMethod === "cod"} onChange={() => setPaymentMethod("cod")} /> Cash on Delivery
+              </label>
+            </div>
+
+            {paymentMethod === "card" && (
+              <div style={{ marginTop: "1rem" }}>
+                <label>
+                  Cardholder name
+                  <input type="text" value={cardName} onChange={(e) => setCardName(e.target.value)} placeholder="Demo: Jane Doe" />
+                </label>
+                <label>
+                  Card number
+                  <input type="text" value={cardNumber} onChange={(e) => setCardNumber(e.target.value)} placeholder="4242 4242 4242 4242 (demo)" />
+                </label>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <label style={{ flex: 1 }}>
+                    Expiry (MM/YY)
+                    <input type="text" value={cardExpiry} onChange={(e) => setCardExpiry(e.target.value)} placeholder="12/34" />
+                  </label>
+                  <label style={{ width: "6rem" }}>
+                    CVV
+                    <input type="password" value={cardCvv} onChange={(e) => setCardCvv(e.target.value)} placeholder="123" />
+                  </label>
+                </div>
+                <p style={{ fontSize: "0.85rem", color: "#666" }}>This is a demo payment — do not enter real card details. Test failing card: 4000 0000 0000 0002</p>
+              </div>
+            )}
+
+            {paymentMethod === "upi" && (
+              <div style={{ marginTop: "1rem" }}>
+                <label>
+                  UPI ID
+                  <input type="text" value={upiId} onChange={(e) => setUpiId(e.target.value)} placeholder="demo@upi" />
+                </label>
+                <p style={{ fontSize: "0.85rem", color: "#666" }}>This is a demo — no real UPI transaction will occur.</p>
+              </div>
+            )}
+
+            {paymentMethod === "netbanking" && (
+              <div style={{ marginTop: "1rem" }}>
+                <label>
+                  Select bank
+                  <select value={bank} onChange={(e) => setBank(e.target.value)}>
+                    <option>State Bank of India</option>
+                    <option>HDFC Bank</option>
+                    <option>ICICI Bank</option>
+                    <option>Axis Bank</option>
+                    <option>Kotak Mahindra Bank</option>
+                  </select>
+                </label>
+                <p style={{ fontSize: "0.85rem", color: "#666" }}>This is a demo — no bank authentication will occur.</p>
+              </div>
+            )}
+
+            {paymentMethod === "cod" && (
+              <p style={{ marginTop: "1rem" }}>You will pay when your order is delivered. No payment details are required.</p>
+            )}
+
+            {error && <p className="checkout-page__error" role="alert">{error}</p>}
+
+            <button type="submit" className="checkout-page__submit" disabled={loading || processingPayment}>
+              {processingPayment ? "Processing payment…" : paymentMethod === "cod" ? `Place Order (${formatPrice(total)})` : `Pay ${formatPrice(total)}`}
+            </button>
+          </div>
         </div>
 
         <aside className="checkout-page__summary" aria-label="Order summary">

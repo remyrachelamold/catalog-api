@@ -6,6 +6,7 @@ import orders from "./routes/orders";
 import admin from "./routes/admin";
 import wishlist from "./routes/wishlist";
 import reviews from "./routes/reviews";
+import payments from "./routes/payments";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use("/admin", admin);
 app.use("/wishlist", wishlist);
 app.use("/catalogs/:productId/reviews", reviews);
 app.use("/catalogs", catalog);
+app.use("/payments", payments);
 
 app.get("/health", (_req, res) => {
   res.status(200).json({ status: "ok" });

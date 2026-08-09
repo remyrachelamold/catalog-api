@@ -18,6 +18,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Respect data-theme toggle set by Settings (demo) */
+:root[data-theme="dark"] body,
+html[data-theme="dark"] body,
+[data-theme="dark"] body {
+  background: #0f1720 !important;
+  color: #e6eef6 !important;
+}
+
+[data-theme="light"] body {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
 #root {
   min-height: 100vh;
 }

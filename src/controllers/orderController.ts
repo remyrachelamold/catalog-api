@@ -9,6 +9,7 @@ export const createOrder = async (req: Request, res: Response) => {
   try {
     const userId = req.user?.id;
     const { items, shipping } = req.body;
+    const { paymentMethod, paymentStatus, transactionId, paidAt } = req.body ?? {};
 
     if (!userId) {
       return res.status(401).json({ message: "Authentication required." });
@@ -38,7 +39,7 @@ export const createOrder = async (req: Request, res: Response) => {
     const tax = Number((subtotal * TAX_RATE).toFixed(2));
     const total = Number((subtotal + SHIPPING_COST + tax).toFixed(2));
 
-    const order = await Order.create({
+    const orderPayload: any = {
       user: new mongoose.Types.ObjectId(userId),
       products: sanitizedItems,
       shipping,
@@ -46,7 +47,32 @@ export const createOrder = async (req: Request, res: Response) => {
       shippingCost: SHIPPING_COST,
       tax,
       total,
-    });
+    };
+
+    // Only accept safe payment fields and whitelist values
+    const allowedMethods = ["card", "upi", "netbanking", "cod"];
+    const allowedStatuses = ["pending", "paid", "failed"];
+
+    if (paymentMethod && allowedMethods.includes(paymentMethod)) {
+      orderPayload.paymentMethod = paymentMethod;
+    }
+
+    if (paymentStatus && allowedStatuses.includes(paymentStatus)) {
+      orderPayload.paymentStatus = paymentStatus;
+    }
+
+    if (transactionId && typeof transactionId === "string") {
+      orderPayload.transactionId = transactionId;
+    }
+
+    if (paidAt) {
+      const date = new Date(paidAt);
+      if (!isNaN(date.getTime())) {
+        orderPayload.paidAt = date;
+      }
+    }
+
+    const order = await Order.create(orderPayload);
 
     return res.status(201).json({
       message: "Order placed successfully.",

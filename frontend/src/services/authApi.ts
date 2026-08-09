@@ -53,3 +53,28 @@ export async function fetchProfile(): Promise<AuthProfileResponse> {
   const response = await apiClient.get<AuthProfileResponse>("/auth/profile");
   return response.data;
 }
+
+export async function updateProfile(payload: { fullName: string; email: string }) {
+  const response = await apiClient.patch("/auth/profile", payload);
+  return response.data;
+}
+
+export async function changePassword(payload: { currentPassword: string; newPassword: string; confirmPassword: string }) {
+  const response = await apiClient.patch("/auth/password", payload);
+  return response.data;
+}
+
+export async function updatePreferences(payload: any) {
+  const response = await apiClient.patch("/auth/preferences", payload);
+  return response.data;
+}
+
+export async function logoutAll(): Promise<{ message: string }> {
+  const response = await apiClient.post("/auth/logout-all", {});
+  return response.data;
+}
+
+export async function deleteAccount(): Promise<{ message: string }> {
+  const response = await apiClient.delete("/auth");
+  return response.data;
+}

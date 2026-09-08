@@ -1,3 +1,31 @@
+:root {
+  --app-bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-alt: #f8fafc;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --primary: #4338ca;
+  --primary-soft: #eef2ff;
+  --shadow: rgba(15, 23, 42, 0.08);
+  --input-bg: #ffffff;
+  --button-text: #ffffff;
+}
+
+:root[data-theme="dark"] {
+  --app-bg: #0f1720;
+  --surface: #111827;
+  --surface-alt: #0b1220;
+  --text: #e6eef6;
+  --text-muted: #9aa9bb;
+  --border: rgba(148, 163, 184, 0.28);
+  --primary: #818cf8;
+  --primary-soft: rgba(99, 102, 241, 0.18);
+  --shadow: rgba(2, 6, 23, 0.45);
+  --input-bg: #0f172a;
+  --button-text: #ffffff;
+}
+
 *,
 *::before,
 *::after {
@@ -6,35 +34,91 @@
 
 html {
   scroll-behavior: smooth;
+  background: var(--app-bg);
+  color: var(--text);
 }
 
 body {
   margin: 0;
+  min-height: 100vh;
   font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
-  background: #ffffff;
-  color: #0f172a;
+  background: var(--app-bg);
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-/* Respect data-theme toggle set by Settings (demo) */
-:root[data-theme="dark"] body,
-html[data-theme="dark"] body,
-[data-theme="dark"] body {
-  background: #0f1720 !important;
-  color: #e6eef6 !important;
-}
-
-[data-theme="light"] body {
-  background: #ffffff !important;
-  color: #0f172a !important;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 #root {
   min-height: 100vh;
+  background: var(--app-bg);
+  color: var(--text);
 }
 
-button {
+button,
+input,
+select,
+textarea {
   font: inherit;
+}
+
+:root[data-theme="dark"] body,
+:root[data-theme="dark"] #root,
+:root[data-theme="dark"] .app,
+:root[data-theme="dark"] .navbar,
+:root[data-theme="dark"] .settings-page__sidebar,
+:root[data-theme="dark"] .settings-card,
+:root[data-theme="dark"] .home__hero,
+:root[data-theme="dark"] .home__state--empty,
+:root[data-theme="dark"] .home__state--error,
+:root[data-theme="dark"] .product-card,
+:root[data-theme="dark"] .profile-card,
+:root[data-theme="dark"] .cart-page,
+:root[data-theme="dark"] .checkout-page,
+:root[data-theme="dark"] .wishlist-page,
+:root[data-theme="dark"] .auth-page,
+:root[data-theme="dark"] .orders-page,
+:root[data-theme="dark"] .admin-page {
+  background-color: var(--app-bg);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .navbar__link,
+:root[data-theme="dark"] .navbar__title,
+:root[data-theme="dark"] .navbar__brand,
+:root[data-theme="dark"] .home__title,
+:root[data-theme="dark"] .home__section-title,
+:root[data-theme="dark"] .home__state h3,
+:root[data-theme="dark"] .settings-page__sidebar nav a,
+:root[data-theme="dark"] .settings-card label,
+:root[data-theme="dark"] .settings-card h3,
+:root[data-theme="dark"] .settings-card h4 {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .navbar__link {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .navbar__link:hover,
+:root[data-theme="dark"] .navbar__link--active {
+  background: rgba(129, 140, 248, 0.15);
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .home__subtitle,
+:root[data-theme="dark"] .home__section-text,
+:root[data-theme="dark"] .home__state p,
+:root[data-theme="dark"] .settings-page__sidebar,
+:root[data-theme="dark"] .settings-card,
+:root[data-theme="dark"] .settings-card input,
+:root[data-theme="dark"] .settings-card select {
+  color: var(--text);
+}
+
+:root[data-theme="dark"] .settings-card input,
+:root[data-theme="dark"] .settings-card select {
+  background: var(--input-bg);
+  border-color: var(--border);
 }

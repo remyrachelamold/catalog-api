@@ -46,9 +46,13 @@ export default function SettingsPage() {
         try {
           if (ap === "system") {
             document.documentElement.removeAttribute("data-theme");
+            document.body.removeAttribute("data-theme");
+            document.documentElement.style.colorScheme = "light";
             window.localStorage.removeItem("catalog-appearance");
           } else {
             document.documentElement.setAttribute("data-theme", ap);
+            document.body.setAttribute("data-theme", ap);
+            document.documentElement.style.colorScheme = ap;
             window.localStorage.setItem("catalog-appearance", ap);
           }
         } catch (e) {
@@ -110,9 +114,13 @@ export default function SettingsPage() {
       // apply appearance immediately
       if (appearance === "system") {
         document.documentElement.removeAttribute("data-theme");
+        document.body.removeAttribute("data-theme");
+        document.documentElement.style.colorScheme = "light";
         window.localStorage.removeItem("catalog-appearance");
       } else {
         document.documentElement.setAttribute("data-theme", appearance);
+        document.body.setAttribute("data-theme", appearance);
+        document.documentElement.style.colorScheme = appearance;
         window.localStorage.setItem("catalog-appearance", appearance);
       }
       showToast("Preferences saved.", "success");

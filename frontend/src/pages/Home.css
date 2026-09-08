@@ -5,8 +5,14 @@
 .home__hero {
   background:
     radial-gradient(circle at top right, rgba(99, 102, 241, 0.18), transparent 35%),
-    linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-  border-bottom: 1px solid #e2e8f0;
+    linear-gradient(180deg, var(--surface-alt) 0%, var(--surface) 100%);
+  border-bottom: 1px solid var(--border);
+}
+
+:root[data-theme="dark"] .home__hero {
+  background:
+    radial-gradient(circle at top right, rgba(99, 102, 241, 0.22), transparent 35%),
+    linear-gradient(180deg, #0f1720 0%, #111827 100%);
 }
 
 .home__hero-content {

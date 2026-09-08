@@ -32,9 +32,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const ap = (payload.user as any).appearance;
       if (ap === "light" || ap === "dark") {
         document.documentElement.setAttribute("data-theme", ap);
+        document.body.setAttribute("data-theme", ap);
+        document.documentElement.style.colorScheme = ap;
         window.localStorage.setItem("catalog-appearance", ap);
       } else {
         document.documentElement.removeAttribute("data-theme");
+        document.body.removeAttribute("data-theme");
+        document.documentElement.style.colorScheme = "light";
         window.localStorage.removeItem("catalog-appearance");
       }
     } catch (e) {
@@ -47,6 +51,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
     try {
       document.documentElement.removeAttribute("data-theme");
+      document.body.removeAttribute("data-theme");
+      document.documentElement.style.colorScheme = "light";
       window.localStorage.removeItem("catalog-appearance");
     } catch (e) {
       // ignore
@@ -68,9 +74,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const ap = (data.user as any).appearance;
         if (ap === "light" || ap === "dark") {
           document.documentElement.setAttribute("data-theme", ap);
+          document.body.setAttribute("data-theme", ap);
+          document.documentElement.style.colorScheme = ap;
           window.localStorage.setItem("catalog-appearance", ap);
         } else {
           document.documentElement.removeAttribute("data-theme");
+          document.body.removeAttribute("data-theme");
+          document.documentElement.style.colorScheme = "light";
           window.localStorage.removeItem("catalog-appearance");
         }
       } catch (e) {

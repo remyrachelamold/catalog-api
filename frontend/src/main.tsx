@@ -13,10 +13,15 @@ import { ToastProvider } from "./context/ToastContext";
 // Apply saved appearance preference (if any)
 try {
   const saved = window.localStorage.getItem("catalog-appearance");
-  if (saved === "dark" || saved === "light") {
-    document.documentElement.setAttribute("data-theme", saved);
+  const theme = saved === "dark" || saved === "light" ? saved : null;
+  if (theme) {
+    document.documentElement.setAttribute("data-theme", theme);
+    document.body.setAttribute("data-theme", theme);
+    document.documentElement.style.colorScheme = theme;
   } else {
     document.documentElement.removeAttribute("data-theme");
+    document.body.removeAttribute("data-theme");
+    document.documentElement.style.colorScheme = "light";
   }
 } catch (e) {
   // ignore

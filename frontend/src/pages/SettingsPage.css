@@ -5,10 +5,11 @@
   grid-template-columns: 260px 1fr;
   gap: 1.5rem;
   padding: 0 1rem;
+  color: var(--text);
 }
 
 .settings-page__sidebar {
-  background: var(--bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 1rem;
@@ -28,10 +29,11 @@
 }
 
 .settings-card {
-  background: var(--bg);
+  background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   padding: 1rem;
+  color: var(--text);
 }
 
 .settings-card--danger {
